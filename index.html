@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="ur" dir="rtl" id="html-root">
+here<!DOCTYPE html>
+<html lang="ur" dir="ltr" id="html-root">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -30,7 +30,7 @@ header {
   width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
 }
 .icon-btn:active { background: var(--bg-hover); }
-.brand { font-size: 19px; font-weight: 700; letter-spacing: 0.5px; color: #202124; }
+.brand { font-size: 19px; font-weight: 700; letter-spacing: 0.5px; color: #202124; direction: ltr; unicode-bidi: embed; }
 .brand span { color: var(--accent); }
 .lang-select {
   background: var(--bg-surface); color: var(--text); border: 1px solid var(--border);
@@ -40,11 +40,11 @@ header {
 /* Sidebar */
 .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 90; display: none; }
 .sidebar {
-  position: fixed; top: 0; bottom: 0; right: -280px; width: 270px; background: var(--bg-surface);
-  border-left: 1px solid var(--border); z-index: 100; transition: 0.3s ease;
-  display: flex; flex-direction: column; padding: 15px; box-shadow: -4px 0 15px rgba(0,0,0,0.05);
+  position: fixed; top: 0; bottom: 0; left: -280px; width: 270px; background: var(--bg-surface);
+  border-right: 1px solid var(--border); z-index: 100; transition: 0.3s ease;
+  display: flex; flex-direction: column; padding: 15px; box-shadow: 4px 0 15px rgba(0,0,0,0.05); text-align: left;
 }
-.sidebar.open { right: 0; }
+.sidebar.open { left: 0; }
 .new-chat-btn {
   background: var(--accent-light); color: var(--accent); border: 1px solid var(--border);
   padding: 12px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer;
@@ -65,7 +65,7 @@ header {
 .modal-box {
   background: var(--bg-main); border: 1px solid var(--border); border-radius: 16px;
   padding: 20px; width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: left;
 }
 .modal-box input {
   background: var(--bg-surface); border: 1px solid var(--border); padding: 10px;
@@ -86,7 +86,7 @@ header {
 }
 .welcome-screen h1 { font-size: 26px; color: var(--accent); }
 .quick-agents {
-  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; text-align: right;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; text-align: left;
 }
 .q-card {
   background: var(--bg-surface); border: 1px solid var(--border); padding: 12px;
@@ -97,7 +97,7 @@ header {
 .q-card span { font-size: 11px; color: var(--text-dim); }
 
 /* Messages */
-.msg { max-width: 88%; padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.6; word-wrap: break-word; white-space: pre-wrap; }
+.msg { max-width: 88%; padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.6; word-wrap: break-word; white-space: pre-wrap; text-align: left; }
 .msg.user { background: var(--accent-light); color: var(--text); align-self: flex-end; border-bottom-right-radius: 4px; }
 .msg.ai { background: transparent; align-self: flex-start; width: 100%; max-width: 100%; padding: 8px 4px; }
 .ai-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-size: 13px; color: var(--accent); font-weight: 600; }
@@ -121,19 +121,19 @@ header {
   box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 .plus-menu {
-  position: absolute; bottom: 58px; right: 10px; background: var(--bg-main);
+  position: absolute; bottom: 58px; left: 10px; background: var(--bg-main);
   border: 1px solid var(--border); border-radius: 14px; padding: 8px; display: none;
-  flex-direction: column; gap: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); z-index: 50;
+  flex-direction: column; gap: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); z-index: 50; text-align: left;
 }
 .plus-menu button {
   background: transparent; border: none; color: var(--text); padding: 10px 14px;
-  text-align: right; font-size: 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+  text-align: left; font-size: 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px;
 }
 .plus-menu button:hover { background: var(--bg-hover); }
 
 textarea {
   flex: 1; background: transparent; border: none; color: var(--text); font-size: 15px;
-  resize: none; max-height: 110px; min-height: 24px; padding: 6px 4px; outline: none; line-height: 1.4;
+  resize: none; max-height: 110px; min-height: 24px; padding: 6px 4px; outline: none; line-height: 1.4; text-align: left;
 }
 .mic-active { color: #d93025 !important; animation: pulse 1s infinite; }
 @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
@@ -144,32 +144,32 @@ textarea {
 }
 </style>
 </head>
-<body>
+<body onclick="handleBodyClick(event)">
 
 <!-- Sidebar -->
 <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
-<div class="sidebar" id="sidebar">
-  <button class="new-chat-btn" onclick="startNewChat()" id="txtNewChatSidebar">➕ نئی چیٹ (New Chat)</button>
-  <div style="font-size:12px; color:var(--text-dim); margin-bottom:8px;" id="txtHistoryTitle">پرانی بات چیت (History)</div>
+<div class="sidebar" id="sidebar" onclick="event.stopPropagation()">
+  <button class="new-chat-btn" onclick="startNewChat()" id="txtNewChatSidebar">➕ New Chat</button>
+  <div style="font-size:12px; color:var(--text-dim); margin-bottom:8px;" id="txtHistoryTitle">Chat History</div>
   <div class="history-list" id="historyList"></div>
-  <button class="new-chat-btn" style="background:var(--bg-hover); color:var(--text); margin-top:10px; margin-bottom:0;" onclick="openKeyModal()">🔑 API Key سیٹنگ</button>
+  <button class="new-chat-btn" style="background:var(--bg-hover); color:var(--text); margin-top:10px; margin-bottom:0;" onclick="openKeyModal()">🔑 API Key Settings</button>
 </div>
 
 <!-- API Key Modal -->
-<div class="modal" id="keyModal">
+<div class="modal" id="keyModal" onclick="event.stopPropagation()">
   <div class="modal-box">
     <h3>Google Gemini API Key</h3>
-    <p style="font-size:12px; color:var(--text-dim);">اپنی مفت API Key یہاں درج کریں:</p>
+    <p style="font-size:12px; color:var(--text-dim);">Enter your free API Key here:</p>
     <input type="password" id="apiKeyInput" placeholder="AIzaSy...">
-    <button class="save-btn" onclick="saveApiKey()">محفوظ کریں (Save)</button>
-    <button class="save-btn" style="background:transparent; color:var(--text); border:1px solid var(--border);" onclick="closeKeyModal()">بند کریں</button>
+    <button class="save-btn" onclick="saveApiKey()">Save</button>
+    <button class="save-btn" style="background:transparent; color:var(--text); border:1px solid var(--border);" onclick="closeKeyModal()">Close</button>
   </div>
 </div>
 
 <!-- Header -->
 <header>
   <div class="header-left">
-    <button class="icon-btn" onclick="toggleSidebar()" title="Menu">☰</button>
+    <button class="icon-btn" onclick="toggleSidebar(); event.stopPropagation();" title="Menu">☰</button>
     <div class="brand">UMAIR <span>AI</span></div>
   </div>
   <div class="header-right">
@@ -186,24 +186,24 @@ textarea {
 <!-- Chat Area -->
 <div class="chat-scroll" id="chatBox">
   <div class="welcome-screen" id="welcomeScreen">
-    <h1 id="welTitle">السلام علیکم، عمیر!</h1>
-    <p style="color:var(--text-dim); font-size:14px;" id="welDesc">آپ کا مرکزی AI ایجنٹ تیار ہے۔ نیچے سے کوئی کام منتخب کریں یا براہِ راست بات کریں:</p>
+    <h1 id="welTitle">Hello, Umair!</h1>
+    <p style="color:var(--text-dim); font-size:14px;" id="welDesc">Your main AI agent is ready. Choose a task below or chat directly:</p>
     <div class="quick-agents" id="quickAgentsGrid">
       <div class="q-card" onclick="useAgent('میرے لیے ایک پروفیشنل بزنس ویب سائٹ کا مکمل کوڈ بناؤ: ')">
         <b id="qa1t">🌐 Website Agent</b>
-        <span id="qa1d">اپنی یا کلائنٹ کی ویب سائٹ بنائیں</span>
+        <span id="qa1d">Build websites for yourself or clients</span>
       </div>
       <div class="q-card" onclick="useAgent('مجھے امریکہ یا برطانیہ کے ایسے کاروبار تلاش کرنے کا طریقہ اور پلان دو جنہیں ویب سائٹ کی ضرورت ہو: ')">
         <b id="qa2t">🔎 Research Agent</b>
-        <span id="qa2d">کلائنٹس اور بزنس تلاش کریں</span>
+        <span id="qa2d">Find clients and businesses</span>
       </div>
       <div class="q-card" onclick="useAgent('میرے کلائنٹ کے لیے ایک کسٹم AI ایجنٹ کا پلان اور سسٹم پرامپٹ تیار کرو جسے میں فروخت کر سکوں: ')">
-        <b id="qa3t">🤖 Agent Builder</b>
-        <span id="qa3d">کلائنٹ کے لیے نیا ایجنٹ بنائیں</span>
+        <b id="qa3t">🌐 Agent Builder</b>
+        <span id="qa3d">Build custom agents for clients</span>
       </div>
       <div class="q-card" onclick="useAgent('مجھے آن لائن کام سے ماہانہ 70 ہزار روپے کمانے کا عملی مرحلہ وار پلان دو: ')">
         <b id="qa4t">💼 Business Planner</b>
-        <span id="qa4d">آمدنی اور روزانہ کام کا پلان</span>
+        <span id="qa4d">Income & daily work plan</span>
       </div>
     </div>
   </div>
@@ -221,13 +221,14 @@ textarea {
   </div>
 
   <div class="input-pill">
-    <div class="plus-menu" id="plusMenu">
-      <button onclick="document.getElementById('cameraInput').click(); togglePlusMenu();" id="menuCam">📷 کیمرے سے تصویر کھینچیں</button>
-      <button onclick="document.getElementById('galleryInput').click(); togglePlusMenu();" id="menuGal">🖼️ گیلری سے تصویر لگائیں</button>
+    <!-- Plus Menu -->
+    <div class="plus-menu" id="plusMenu" onclick="event.stopPropagation()">
+      <button onclick="document.getElementById('cameraInput').click(); togglePlusMenu();" id="menuCam">📷 Take Photo</button>
+      <button onclick="document.getElementById('galleryInput').click(); togglePlusMenu();" id="menuGal">🖼️ Upload from Gallery</button>
     </div>
 
-    <button class="icon-btn" onclick="togglePlusMenu()" title="Add Photo">➕</button>
-    <textarea id="msgInput" rows="1" placeholder="UMAIR AI سے پوچھیں..." oninput="autoGrow(this)"></textarea>
+    <button class="icon-btn" id="plusBtn" onclick="togglePlusMenu(); event.stopPropagation();" title="Add Photo">➕</button>
+    <textarea id="msgInput" rows="1" placeholder="Ask UMAIR AI..." oninput="autoGrow(this)"></textarea>
     <button class="icon-btn" id="micBtn" onclick="startVoice()" title="Voice">🎤</button>
     <button class="send-btn" onclick="sendMessage()">↑</button>
   </div>
@@ -304,7 +305,6 @@ window.onload = () => {
 function changeLang() {
   const l = document.getElementById("langSelect").value;
   const t = translations[l];
-  document.getElementById("html-root").setAttribute("dir", l === "ur" || l === "hi" ? "rtl" : "ltr");
   document.getElementById("txtNewChatSidebar").textContent = t.newChat;
   document.getElementById("txtHistoryTitle").textContent = t.history;
   document.getElementById("welTitle").textContent = t.welTitle;
@@ -327,6 +327,14 @@ function toggleSidebar() {
   const ov = document.getElementById("overlay");
   sb.classList.toggle("open");
   ov.style.display = sb.classList.contains("open") ? "block" : "none";
+}
+
+function handleBodyClick(e) {
+  const menu = document.getElementById("plusMenu");
+  const plusBtn = document.getElementById("plusBtn");
+  if (menu.style.display === "flex" && !menu.contains(e.target) && e.target !== plusBtn) {
+    menu.style.display = "none";
+  }
 }
 
 function openKeyModal() {
@@ -511,8 +519,7 @@ async function sendMessage() {
   const aiBubble = appendBubble("ai", "سوچ رہا ہے...");
 
   try {
-    // Using the stable gemini-1.5-flash endpoint
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ contents: [{ role: "user", parts: parts }] })
