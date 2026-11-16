@@ -3,18 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#0d1117">
-<title>UMAIR AI — Your Personal AI Brain</title>
+<meta name="theme-color" content="#131314">
+<title>UMAIR AI — Gemini Style Chat</title>
 <style>
 :root{
-  --bg-main: #0d1117;
-  --bg-card: #161b22;
-  --border-color: #30363d;
-  --accent-blue: #1f6feb;
-  --accent-glow: rgba(31, 111, 235, 0.4);
-  --text-main: #f0f6fc;
-  --text-muted: #8b949e;
-  --success: #238636;
+  --bg-main: #131314;
+  --bg-card: #1e1f20;
+  --bg-chat: #282a2c;
+  --border-color: #3c4043;
+  --accent-blue: #8ab4f8;
+  --text-main: #e3e3e3;
+  --text-muted: #8e918f;
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI', Tahoma, sans-serif;}
 body{
@@ -25,7 +24,7 @@ body{
   flex-direction:column;
 }
 header{
-  background:var(--bg-card);
+  background:var(--bg-main);
   padding:15px 20px;
   display:flex;
   align-items:center;
@@ -35,13 +34,12 @@ header{
   top:0;
   z-index:100;
 }
-.logo-area{display:flex;align-items:center;gap:10px;}
-.logo{font-size:20px;font-weight:bold;letter-spacing:0.5px;}
-.logo span{color:#58a6ff;}
+.logo{font-size:20px;font-weight:bold;color:white;}
+.logo span{color:var(--accent-blue);}
 
 .top-controls{display:flex;gap:8px;align-items:center;}
 .lang-select, .key-btn {
-  background: var(--bg-main);
+  background: var(--bg-card);
   color: var(--text-main);
   border: 1px solid var(--border-color);
   padding: 6px 10px;
@@ -50,33 +48,26 @@ header{
   outline: none;
   cursor: pointer;
 }
-.key-btn{background: #1f6feb;border:none;font-weight:600;}
+.key-btn{background: #1a73e8;border:none;font-weight:600;color:white;}
 
 main{
   flex:1;
-  max-width:700px;
+  max-width:750px;
   width:100%;
   margin:0 auto;
-  padding:20px;
+  padding:15px;
   display:flex;
   flex-direction:column;
-  gap:20px;
+  gap:15px;
+  padding-bottom: 120px;
 }
-.hero-card{
-  background:linear-gradient(135deg, #1f6feb22, #161b22);
-  border:1px solid var(--border-color);
-  border-radius:16px;
-  padding:24px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-}
-.hero-card h2{font-size:22px;margin-bottom:8px;color:#58a6ff;}
-.hero-card p{color:var(--text-muted);font-size:14px;line-height:1.6;}
 
+/* API Key Bar */
 .api-section {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  padding: 15px;
+  padding: 12px;
   display: flex;
   gap: 10px;
   align-items: center;
@@ -92,92 +83,94 @@ main{
   outline: none;
 }
 
-.section-title{
-  font-size:16px;
-  font-weight:600;
-  color:var(--text-muted);
-  margin-top:10px;
+/* Chat Container (Gemini Style) */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
 }
-.agents-grid{
-  display:grid;
-  grid-template-columns:repeat(2, 1fr);
-  gap:12px;
+.message {
+  padding: 14px 18px;
+  border-radius: 16px;
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 90%;
+  word-wrap: break-word;
+  white-space: pre-wrap;
 }
-.agent-card{
-  background:var(--bg-card);
-  border:1px solid var(--border-color);
-  border-radius:12px;
-  padding:16px;
+.user-msg {
+  background: var(--bg-chat);
+  color: var(--text-main);
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
 }
-.agent-card .icon{font-size:24px;margin-bottom:8px;}
-.agent-card h4{font-size:14px;margin-bottom:4px;color:var(--text-main);}
-.agent-card p{font-size:12px;color:var(--text-muted);}
+.ai-msg {
+  background: transparent;
+  color: var(--text-main);
+  align-self: flex-start;
+  border: 1px solid var(--border-color);
+  border-bottom-left-radius: 4px;
+  width: 100%;
+}
+.ai-msg strong {color: var(--accent-blue); display:block; margin-bottom:5px;}
 
-.chat-box{
-  background:var(--bg-card);
-  border:1px solid var(--border-color);
-  border-radius:16px;
-  padding:20px;
-  display:flex;
-  flex-direction:column;
-  gap:15px;
+/* Fixed Bottom Input Box */
+.input-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg-main);
+  padding: 12px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: center;
 }
-.chat-box h3{font-size:16px;color:var(--text-main);}
-textarea{
-  width:100%;
-  height:100px;
-  background:var(--bg-main);
-  border:1px solid var(--border-color);
-  border-radius:10px;
-  padding:12px;
-  color:var(--text-main);
-  font-size:15px;
-  resize:none;
-  outline:none;
+.input-box-wrapper {
+  max-width: 750px;
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  gap: 10px;
 }
-textarea:focus{border-color:var(--accent-blue);}
-.btn-send{
-  background:var(--accent-blue);
-  color:white;
-  border:none;
-  padding:12px 20px;
-  border-radius:10px;
-  font-size:15px;
-  font-weight:600;
-  cursor:pointer;
-  align-self:flex-end;
+textarea {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 15px;
+  resize: none;
+  height: 24px;
+  max-height: 120px;
+  outline: none;
 }
-.btn-send:hover{background:#1158c7;}
-#reply{
-  background:var(--bg-main);
-  border:1px solid var(--border-color);
-  border-radius:10px;
-  padding:15px;
-  font-size:14px;
-  line-height:1.7;
-  color:#79c0ff;
-  min-height:50px;
-  white-space:pre-wrap;
-  display:none;
-}
-footer{
-  text-align:center;
-  padding:20px;
-  font-size:12px;
-  color:var(--text-muted);
-  border-top:1px solid var(--border-color);
-  background:var(--bg-card);
+.btn-send {
+  background: var(--accent-blue);
+  color: #131314;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
 }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo-area">
-    <div class="logo">UMAIR <span>AI</span></div>
-  </div>
+  <div class="logo">UMAIR <span>AI</span></div>
   <div class="top-controls">
-    <select id="langSelect" class="lang-select" onchange="changeLanguage()">
+    <select id="langSelect" class="lang-select">
       <option value="ur">اردو</option>
       <option value="hi">हिन्दी</option>
       <option value="en">English</option>
@@ -187,51 +180,28 @@ footer{
 </header>
 
 <main>
-  <div class="hero-card">
-    <h2 id="t-title">السلام علیکم، عمیر!</h2>
-    <p id="t-desc">میں آپ کا مرکزی AI ایجنٹ ہوں۔ نیچے اپنی گوگل جেমিনি API Key محفوظ کریں تاکہ میں مکمل طاقت کے ساتھ کام کر سکوں۔</p>
-  </div>
-
+  <!-- API Key Box -->
   <div class="api-section">
-    <input type="password" id="apiKeyInput" placeholder="अपनी Google Gemini API Key यहाँ पेस्ट करें...">
+    <input type="password" id="apiKeyInput" placeholder="Google Gemini API Key یہاں درج کریں...">
     <button class="key-btn" onclick="saveApiKey()">محفوظ کریں</button>
   </div>
 
-  <div class="section-title" id="t-active-agents">آپ کے فعال ایجنٹس</div>
-  <div class="agents-grid">
-    <div class="agent-card">
-      <div class="icon">🌐</div>
-      <h4 id="t-ag1-title">Website Agent</h4>
-      <p id="t-ag1-desc">پروفیشنل ویب سائٹس تیار کرنا</p>
+  <!-- Chat History Container -->
+  <div class="chat-container" id="chatContainer">
+    <div class="message ai-msg">
+      <strong>UMAIR AI</strong>
+      السلام علیکم! میں آپ کا مرکزی AI ایجنٹ ہوں۔ اوپر اپنی API Key محفوظ کریں اور نیچے چیٹ میں مجھ سے کچھ بھی پوچھیں یا بزنس/ویب سائٹ کا حکم دیں۔
     </div>
-    <div class="agent-card">
-      <div class="icon">🔎</div>
-      <h4 id="t-ag2-title">Research Agent</h4>
-      <p id="t-ag2-desc">امریکہ/برطانیہ میں بزنس ریسرچ</p>
-    </div>
-    <div class="agent-card">
-      <div class="icon">💼</div>
-      <h4 id="t-ag3-title">Business Agent</h4>
-      <p id="t-ag3-desc">کلائنٹس کے پروجیکٹس مینجمنٹ</p>
-    </div>
-    <div class="agent-card">
-      <div class="icon">🤖</div>
-      <h4 id="t-ag4-title">Agent Builder</h4>
-      <p id="t-ag4-desc">نئے ایجنٹس تیار کرنا</p>
-    </div>
-  </div>
-
-  <div class="chat-box">
-    <h3 id="t-chat-title">مرکزی ایجنٹ سے بات چیت</h3>
-    <textarea id="message" placeholder="یہاں اپنا حکم یا پیغام لکھیں..."></textarea>
-    <button class="btn-send" id="t-btn" onclick="sendToAI()">پیغام بھیجیں</button>
-    <div id="reply"></div>
   </div>
 </main>
 
-<footer>
-  UMAIR AI System © 2026 | Powered by Google Gemini API
-</footer>
+<!-- Bottom Sticky Input Box -->
+<div class="input-area">
+  <div class="input-box-wrapper">
+    <textarea id="message" placeholder="یہاں پیغام لکھیں..." rows="1" oninput="autoResize(this)"></textarea>
+    <button class="btn-send" onclick="sendToAI()">↑</button>
+  </div>
+</div>
 
 <script>
 window.onload = function() {
@@ -244,131 +214,74 @@ window.onload = function() {
 function saveApiKey() {
   const key = document.getElementById("apiKeyInput").value.trim();
   if(!key) {
-    alert("براہ کرم پہلے درست API Key لکھیں۔");
+    alert("پہلے درست API Key لکھیں۔");
     return;
   }
   localStorage.setItem("umair_gemini_key", key);
   alert("API Key کامیابی سے محفوظ ہو گئی ہے!");
 }
 
-const translations = {
-  ur: {
-    title: "السلام علیکم، عمیر!",
-    desc: "میں آپ کا مرکزی AI ایجنٹ ہوں۔ نیچے اپنی گوگل جেমিনি API Key محفوظ کریں تاکہ میں مکمل طاقت کے ساتھ کام کر سکوں۔",
-    activeAgents: "آپ کے فعال ایجنٹس",
-    ag1Title: "Website Agent", ag1Desc: "پروفیشنل ویب سائٹس تیار کرنا",
-    ag2Title: "Research Agent", ag2Desc: "امریکہ/برطانیہ میں بزنس ریسرچ",
-    ag3Title: "Business Agent", ag3Desc: "کلائنٹس کے پروجیکٹس مینجمنٹ",
-    ag4Title: "Agent Builder", ag4Desc: "نئے ایجنٹس تیار کرنا",
-    chatTitle: "مرکزی ایجنٹ سے بات چیت",
-    placeholder: "یہاں اپنا حکم یا پیغام لکھیں...",
-    btn: "پیغام بھیجیں"
-  },
-  hi: {
-    title: "नमस्ते, उमैर!",
-    desc: "मैं आपका मुख्य AI एजेंट हूँ। नीचे अपनी Google Gemini API Key सेव करें ताकि मैं पूरी क्षमता से काम कर सकूँ।",
-    activeAgents: "आपके सक्रिय एजेंट्स",
-    ag1Title: "Website Agent", ag1Desc: "प्रोफेशनल वेबसाइट्स तैयार करना",
-    ag2Title: "Research Agent", ag2Desc: "यूएस/यूके में बिजनेस रिसर्च",
-    ag3Title: "Business Agent", ag3Desc: "क्लाइंट्स के प्रोजेक्ट्स मैनेजमेंट",
-    ag4Title: "Agent Builder", ag4Desc: "नए एजेंट्स तैयार करना",
-    chatTitle: "मुख्य एजेंट से बातचीत",
-    placeholder: "यहाँ अपना आदेश या संदेश लिखें...",
-    btn: "संदेश भेजें"
-  },
-  en: {
-    title: "Hello, Umair!",
-    desc: "I am your main AI agent. Save your Google Gemini API Key below to unlock full AI capabilities.",
-    activeAgents: "Your Active Agents",
-    ag1Title: "Website Agent", ag1Desc: "Build professional websites",
-    ag2Title: "Research Agent", ag2Desc: "US/UK business research",
-    ag3Title: "Business Agent", ag3Desc: "Client project management",
-    ag4Title: "Agent Builder", ag4Desc: "Create custom agents",
-    chatTitle: "Chat with Main Agent",
-    placeholder: "Type your command or message here...",
-    btn: "Send Message"
-  },
-  rom: {
-    title: "Salam Alaikum, Umair!",
-    desc: "Main aapka main AI agent hoon. Neeche apni Google Gemini API Key save karein taake main properly kaam kar sakoon.",
-    activeAgents: "Aapke Active Agents",
-    ag1Title: "Website Agent", ag1Desc: "Professional websites banana",
-    ag2Title: "Research Agent", ag2Desc: "US/UK mein business research",
-    ag3Title: "Business Agent", ag3Desc: "Clients ke projects management",
-    ag4Title: "Agent Builder", ag4Desc: "Naye agents banana",
-    chatTitle: "Main Agent Se Baat Karein",
-    placeholder: "Yahan apna hukm ya message likhein...",
-    btn: "Message Bhejein"
-  }
-};
-
-function changeLanguage() {
-  const lang = document.getElementById("langSelect").value;
-  const t = translations[lang];
-  if(lang === 'ur') {
-    document.getElementById("html-root").setAttribute("dir", "rtl");
-  } else {
-    document.getElementById("html-root").setAttribute("dir", "ltr");
-  }
-  document.getElementById("t-title").textContent = t.title;
-  document.getElementById("t-desc").textContent = t.desc;
-  document.getElementById("t-active-agents").textContent = t.activeAgents;
-  document.getElementById("t-ag1-title").textContent = t.ag1Title;
-  document.getElementById("t-ag1-desc").textContent = t.ag1Desc;
-  document.getElementById("t-ag2-title").textContent = t.ag2Title;
-  document.getElementById("t-ag2-desc").textContent = t.ag2Desc;
-  document.getElementById("t-ag3-title").textContent = t.ag3Title;
-  document.getElementById("t-ag3-desc").textContent = t.ag3Desc;
-  document.getElementById("t-ag4-title").textContent = t.ag4Title;
-  document.getElementById("t-ag4-desc").textContent = t.ag4Desc;
-  document.getElementById("t-chat-title").textContent = t.chatTitle;
-  document.getElementById("message").placeholder = t.placeholder;
-  document.getElementById("t-btn").textContent = t.btn;
+function autoResize(textarea) {
+  textarea.style.height = '24px';
+  textarea.style.height = textarea.scrollHeight + 'px';
 }
 
 async function sendToAI() {
   const apiKey = localStorage.getItem("umair_gemini_key");
   const lang = document.getElementById("langSelect").value;
-  const msg = document.getElementById("message").value.trim();
-  const replyBox = document.getElementById("reply");
+  const msgInput = document.getElementById("message");
+  const msg = msgInput.value.trim();
+  const chatContainer = document.getElementById("chatContainer");
 
   if(!apiKey) {
-    alert("پہلے اپنی API Key اوپر والے خانے میں لکھ کر محفوظ (Save) کریں!");
+    alert("پہلے اوپر خانے میں اپنی API Key محفوظ کریں!");
     return;
   }
-  if(!msg) {
-    replyBox.style.display = "block";
-    replyBox.textContent = "براہ کرم پہلے اپنا پیغام لکھیں۔";
-    return;
-  }
+  if(!msg) return;
 
-  replyBox.style.display = "block";
-  replyBox.textContent = "UMAIR AI سوچ رہا ہے...";
+  // Append User Message
+  const userDiv = document.createElement("div");
+  userDiv.className = "message user-msg";
+  userDiv.textContent = msg;
+  chatContainer.appendChild(userDiv);
 
-  const systemPrompt = "You are UMAIR AI, an advanced personal AI agent built for Umair. You manage sub-agents. Reply in the exact same language or script the user uses (Urdu, Hindi, English, or Roman English). Help him build businesses, write website code, and plan online work.";
+  msgInput.value = "";
+  msgInput.style.height = '24px';
+  window.scrollTo(0, document.body.scrollHeight);
+
+  // Append Loading AI Message
+  const aiDiv = document.createElement("div");
+  aiDiv.className = "message ai-msg";
+  aiDiv.innerHTML = `<strong>UMAIR AI</strong>소چ رہا ہے...`;
+  chatContainer.appendChild(aiDiv);
+  window.scrollTo(0, document.body.scrollHeight);
+
+  const systemPrompt = "You are UMAIR AI, an advanced personal AI agent built for Umair. Reply in the exact same language or script the user uses (Urdu, Hindi, English, or Roman English). Help him build businesses, write website code, and manage digital work.";
 
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+    // Using the stable gemini-2.5-flash endpoint compatible with modern v1 API
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         contents: [
-          { role: "user", parts: [{ text: systemPrompt + "\n\nUser Message: " + msg }] }
+          { role: "user", parts: [{ text: systemPrompt + "\n\nUser: " + msg }] }
         ]
       })
     });
 
     const data = await response.json();
     if(data.candidates && data.candidates[0].content.parts[0].text) {
-      replyBox.textContent = data.candidates[0].content.parts[0].text;
+      aiDiv.innerHTML = `<strong>UMAIR AI</strong>${data.candidates[0].content.parts[0].text}`;
     } else if(data.error) {
-      replyBox.textContent = "گوگل کا ایرر: " + data.error.message;
+      aiDiv.innerHTML = `<strong>UMAIR AI (ایرر)</strong>${data.error.message}`;
     } else {
-      replyBox.textContent = "API سے ڈیٹا حاصل کرنے میں مسئلہ ہوا۔";
+      aiDiv.innerHTML = `<strong>UMAIR AI</strong>ڈیٹا حاصل کرنے میں مسئلہ ہوا۔`;
     }
   } catch (error) {
-    replyBox.textContent = "کنکشن کا مسئلہ ہے: " + error.message;
+    aiDiv.innerHTML = `<strong>UMAIR AI (کنکشن ایرر)</strong>${error.message}`;
   }
+  window.scrollTo(0, document.body.scrollHeight);
 }
 </script>
 
