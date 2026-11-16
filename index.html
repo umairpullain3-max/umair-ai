@@ -1,4 +1,4 @@
-here<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ur" dir="ltr" id="html-root">
 <head>
 <meta charset="UTF-8">
@@ -158,9 +158,9 @@ textarea {
 <!-- API Key Modal -->
 <div class="modal" id="keyModal" onclick="event.stopPropagation()">
   <div class="modal-box">
-    <h3>Google Gemini API Key</h3>
-    <p style="font-size:12px; color:var(--text-dim);">Enter your free API Key here:</p>
-    <input type="password" id="apiKeyInput" placeholder="AIzaSy...">
+    <h3>API Key Settings</h3>
+    <p style="font-size:12px; color:var(--text-dim);">Enter your API Key here:</p>
+    <input type="password" id="apiKeyInput" placeholder="AQ.Ab8RN6K...">
     <button class="save-btn" onclick="saveApiKey()">Save</button>
     <button class="save-btn" style="background:transparent; color:var(--text); border:1px solid var(--border);" onclick="closeKeyModal()">Close</button>
   </div>
@@ -193,15 +193,15 @@ textarea {
         <b id="qa1t">🌐 Website Agent</b>
         <span id="qa1d">Build websites for yourself or clients</span>
       </div>
-      <div class="q-card" onclick="useAgent('مجھے امریکہ یا برطانیہ کے ایسے کاروبار تلاش کرنے کا طریقہ اور پلان دو جنہیں ویب سائٹ کی ضرورت ہو: ')">
+      <div class="q-card" onclick="useAgent('मुझे अमेरिका या برطانیہ کے ایسے کاروبار تلاش کرنے کا طریقہ اور پلان دو جنہیں ویب سائٹ کی ضرورت ہو: ')">
         <b id="qa2t">🔎 Research Agent</b>
         <span id="qa2d">Find clients and businesses</span>
       </div>
       <div class="q-card" onclick="useAgent('میرے کلائنٹ کے لیے ایک کسٹم AI ایجنٹ کا پلان اور سسٹم پرامپٹ تیار کرو جسے میں فروخت کر سکوں: ')">
-        <b id="qa3t">🌐 Agent Builder</b>
+        <b id="qa3t">🤖 Agent Builder</b>
         <span id="qa3d">Build custom agents for clients</span>
       </div>
-      <div class="q-card" onclick="useAgent('مجھے آن لائن کام سے ماہانہ 70 ہزار روپے کمانے کا عملی مرحلہ وار پلان دو: ')">
+      <div class="q-card" onclick="useAgent('मुझे ऑनलाइन کام سے ماہانہ 70 ہزار روپے کمانے کا عملی مرحلہ وار پلان دو: ')">
         <b id="qa4t">💼 Business Planner</b>
         <span id="qa4d">Income & daily work plan</span>
       </div>
@@ -221,7 +221,6 @@ textarea {
   </div>
 
   <div class="input-pill">
-    <!-- Plus Menu -->
     <div class="plus-menu" id="plusMenu" onclick="event.stopPropagation()">
       <button onclick="document.getElementById('cameraInput').click(); togglePlusMenu();" id="menuCam">📷 Take Photo</button>
       <button onclick="document.getElementById('galleryInput').click(); togglePlusMenu();" id="menuGal">🖼️ Upload from Gallery</button>
@@ -519,7 +518,8 @@ async function sendMessage() {
   const aiBubble = appendBubble("ai", "سوچ رہا ہے...");
 
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+    // Dynamic endpoint fallback supporting both standard Gemini API and Vertex AI style keys
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ contents: [{ role: "user", parts: parts }] })
