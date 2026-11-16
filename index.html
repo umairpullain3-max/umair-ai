@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0d1117">
-<title>UMAIR AI — Multi-Language Agent</title>
+<title>UMAIR AI — Your Personal AI Brain</title>
 <style>
 :root{
   --bg-main: #0d1117;
@@ -39,7 +39,8 @@ header{
 .logo{font-size:20px;font-weight:bold;letter-spacing:0.5px;}
 .logo span{color:#58a6ff;}
 
-.lang-select {
+.top-controls{display:flex;gap:8px;align-items:center;}
+.lang-select, .key-btn {
   background: var(--bg-main);
   color: var(--text-main);
   border: 1px solid var(--border-color);
@@ -49,6 +50,7 @@ header{
   outline: none;
   cursor: pointer;
 }
+.key-btn{background: #1f6feb;border:none;font-weight:600;}
 
 main{
   flex:1;
@@ -70,6 +72,26 @@ main{
 .hero-card h2{font-size:22px;margin-bottom:8px;color:#58a6ff;}
 .hero-card p{color:var(--text-muted);font-size:14px;line-height:1.6;}
 
+.api-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 15px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.api-section input {
+  flex: 1;
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: white;
+  font-size: 13px;
+  outline: none;
+}
+
 .section-title{
   font-size:16px;
   font-weight:600;
@@ -86,13 +108,6 @@ main{
   border:1px solid var(--border-color);
   border-radius:12px;
   padding:16px;
-  transition:all 0.2s ease;
-  cursor:pointer;
-}
-.agent-card:hover{
-  border-color:var(--accent-blue);
-  box-shadow: 0 0 12px var(--accent-glow);
-  transform: translateY(-2px);
 }
 .agent-card .icon{font-size:24px;margin-bottom:8px;}
 .agent-card h4{font-size:14px;margin-bottom:4px;color:var(--text-main);}
@@ -119,7 +134,6 @@ textarea{
   font-size:15px;
   resize:none;
   outline:none;
-  transition:border-color 0.2s;
 }
 textarea:focus{border-color:var(--accent-blue);}
 .btn-send{
@@ -131,7 +145,6 @@ textarea:focus{border-color:var(--accent-blue);}
   font-size:15px;
   font-weight:600;
   cursor:pointer;
-  transition:background 0.2s;
   align-self:flex-end;
 }
 .btn-send:hover{background:#1158c7;}
@@ -163,7 +176,7 @@ footer{
   <div class="logo-area">
     <div class="logo">UMAIR <span>AI</span></div>
   </div>
-  <div>
+  <div class="top-controls">
     <select id="langSelect" class="lang-select" onchange="changeLanguage()">
       <option value="ur">اردو</option>
       <option value="hi">हिन्दी</option>
@@ -176,7 +189,13 @@ footer{
 <main>
   <div class="hero-card">
     <h2 id="t-title">السلام علیکم، عمیر!</h2>
-    <p id="t-desc">میں آپ کا مرکزی AI ایجنٹ ہوں۔ آپ کے تمام ذیلی ایجنٹس، ویب سائٹ بلڈر اور بزنس ٹولز یہاں سے کنٹرول ہوں گے۔ بتائیں آج کیا کام کرنا ہے؟</p>
+    <p id="t-desc">میں آپ کا مرکزی AI ایجنٹ ہوں۔ نیچے اپنی گوگل جেমিনি API Key محفوظ کریں تاکہ میں مکمل طاقت کے ساتھ کام کر سکوں۔</p>
+  </div>
+
+  <!-- API Key Input Box -->
+  <div class="api-section">
+    <input type="password" id="apiKeyInput" placeholder="अपनी Google Gemini API Key यहाँ पेस्ट करें...">
+    <button class="key-btn" onclick="saveApiKey()">محفوظ کریں</button>
   </div>
 
   <div class="section-title" id="t-active-agents">آپ کے فعال ایجنٹس</div>
@@ -212,27 +231,44 @@ footer{
 </main>
 
 <footer>
-  UMAIR AI System © 2026 | Multi-Language Personal AI
+  UMAIR AI System © 2026 | Powered by Google Gemini API
 </footer>
 
 <script>
+// Load saved API Key if exists
+window.onload = function() {
+  const savedKey = localStorage.getItem("umair_gemini_key");
+  if(savedKey) {
+    document.getElementById("apiKeyInput").value = savedKey;
+  }
+}
+
+function saveApiKey() {
+  const key = document.getElementById("apiKeyInput").value.trim();
+  if(!key) {
+    alert("براہ کرم پہلے درست API Key لکھیں۔");
+    return;
+  }
+  localStorage.setItem("umair_gemini_key", key);
+  alert("API Key کامیابی سے محفوظ ہو گئی ہے!");
+}
+
 const translations = {
   ur: {
     title: "السلام علیکم، عمیر!",
-    desc: "میں آپ کا مرکزی AI ایجنٹ ہوں۔ آپ کے تمام ذیلی ایجنٹس، ویب سائٹ بلڈر اور بزنس ٹولز یہاں سے کنٹرول ہوں گے۔ بتائیں آج کیا کام کرنا ہے؟",
+    desc: "میں آپ کا مرکزی AI ایجنٹ ہوں۔ نیچے اپنی گوگل جেমিনি API Key محفوظ کریں تاکہ میں مکمل طاقت کے ساتھ کام کر سکوں۔",
     activeAgents: "آپ کے فعال ایجنٹس",
     ag1Title: "Website Agent", ag1Desc: "پروفیشنل ویب سائٹس تیار کرنا",
     ag2Title: "Research Agent", ag2Desc: "امریکہ/برطانیہ میں بزنس ریسرچ",
-    ag3Title: "Business Agent", ag3Desc: "کلائنٹس کے پروجیکٹس مینجمنٹ",
+    ag3Title: "Business Agent", ag3Desc: "کلائنٹس کے پروجیکٹس مینجमेंट",
     ag4Title: "Agent Builder", ag4Desc: "نئے ایجنٹس تیار کرنا",
     chatTitle: "مرکزی ایجنٹ سے بات چیت",
     placeholder: "یہاں اپنا حکم یا پیغام لکھیں...",
-    btn: "پیغام بھیجیں",
-    replyMsg: "حکم موصول ہوا: "
+    btn: "پیغام بھیجیں"
   },
   hi: {
     title: "नमस्ते, उमैर!",
-    desc: "मैं आपका मुख्य AI एजेंट हूँ। आपके सभी सब-एजेंट्स, वेबसाइट बिल्डर और बिजनेस टूल्स यहाँ से कंट्रोल होंगे। बताइए आज क्या काम करना है?",
+    desc: "मैं आपका मुख्य AI एजेंट हूँ। नीचे अपनी Google Gemini API Key सेव करें ताकि मैं पूरी क्षमता से काम कर सकूँ।",
     activeAgents: "आपके सक्रिय एजेंट्स",
     ag1Title: "Website Agent", ag1Desc: "प्रोफेशनल वेबसाइट्स तैयार करना",
     ag2Title: "Research Agent", ag2Desc: "यूएस/यूके में बिजनेस रिसर्च",
@@ -240,48 +276,42 @@ const translations = {
     ag4Title: "Agent Builder", ag4Desc: "नए एजेंट्स तैयार करना",
     chatTitle: "मुख्य एजेंट से बातचीत",
     placeholder: "यहाँ अपना आदेश या संदेश लिखें...",
-    btn: "संदेश भेजें",
-    replyMsg: "आदेश प्राप्त हुआ: "
+    btn: "संदेश भेजें"
   },
   en: {
     title: "Hello, Umair!",
-    desc: "I am your main AI agent. All your sub-agents, website builder, and business tools will be controlled from here. What would you like to do today?",
+    desc: "I am your main AI agent. Save your Google Gemini API Key below to unlock full AI capabilities.",
     activeAgents: "Your Active Agents",
     ag1Title: "Website Agent", ag1Desc: "Build professional websites",
     ag2Title: "Research Agent", ag2Desc: "US/UK business research",
     ag3Title: "Business Agent", ag3Desc: "Client project management",
-    ag4Title: "Agent Builder", ag4Desc: "Create new custom agents",
+    ag4Title: "Agent Builder", ag4Desc: "Create custom agents",
     chatTitle: "Chat with Main Agent",
     placeholder: "Type your command or message here...",
-    btn: "Send Message",
-    replyMsg: "Command received: "
+    btn: "Send Message"
   },
   rom: {
     title: "Salam Alaikum, Umair!",
-    desc: "Main aapka main AI agent hoon. Aapke sabhi sub-agents, website builder aur business tools yahin se control honge. Bataiye aaj kya kaam karna hai?",
+    desc: "Main aapka main AI agent hoon. Neeche apni Google Gemini API Key save karein taake main properly kaam kar sakoon.",
     activeAgents: "Aapke Active Agents",
     ag1Title: "Website Agent", ag1Desc: "Professional websites banana",
     ag2Title: "Research Agent", ag2Desc: "US/UK mein business research",
     ag3Title: "Business Agent", ag3Desc: "Clients ke projects management",
-    ag4Title: "Agent Builder", ag4Desc: "Naye agents taiyar karna",
+    ag4Title: "Agent Builder", ag4Desc: "Naye agents banana",
     chatTitle: "Main Agent Se Baat Karein",
     placeholder: "Yahan apna hukm ya message likhein...",
-    btn: "Message Bhejein",
-    replyMsg: "Hukm mil gaya: "
+    btn: "Message Bhejein"
   }
 };
 
 function changeLanguage() {
   const lang = document.getElementById("langSelect").value;
   const t = translations[lang];
-  
-  // Text direction handle
   if(lang === 'ur') {
     document.getElementById("html-root").setAttribute("dir", "rtl");
   } else {
     document.getElementById("html-root").setAttribute("dir", "ltr");
   }
-
   document.getElementById("t-title").textContent = t.title;
   document.getElementById("t-desc").textContent = t.desc;
   document.getElementById("t-active-agents").textContent = t.activeAgents;
@@ -298,24 +328,47 @@ function changeLanguage() {
   document.getElementById("t-btn").textContent = t.btn;
 }
 
-function sendToAI() {
+async function sendToAI() {
+  const apiKey = localStorage.getItem("umair_gemini_key");
   const lang = document.getElementById("langSelect").value;
-  const t = translations[lang];
   const msg = document.getElementById("message").value.trim();
   const replyBox = document.getElementById("reply");
-  
-  if(!msg) {
-    replyBox.style.display = "block";
-    replyBox.textContent = lang === 'ur' ? "براہ کرم پہلے اپنا پیغام یا حکم یہاں لکھیں۔" : (lang === 'hi' ? "कृपया पहले अपना संदेश या आदेश लिखें।" : (lang === 'rom' ? "Please pehle apna message likhein." : "Please type your message first."));
+
+  if(!apiKey) {
+    alert("پہلے اپنی API Key اوپر والے خانے میں لکھ کر محفوظ (Save) کریں!");
     return;
   }
-  
+  if(!msg) {
+    replyBox.style.display = "block";
+    replyBox.textContent = "براہ کرم پہلے اپنا پیغام لکھیں۔";
+    return;
+  }
+
   replyBox.style.display = "block";
-  replyBox.textContent = lang === 'ur' ? "UMAIR AI آپ کا حکم سمجھ رہا ہے..." : "Processing command...";
-  
-  setTimeout(() => {
-    replyBox.textContent = t.replyMsg + "\"" + msg + "\"\n\n(Interface updated with Multi-Language support successfully!)";
-  }, 1000);
+  replyBox.textContent = "UMAIR AI سوچ رہا ہے...";
+
+  const systemPrompt = "You are UMAIR AI, an advanced personal AI agent built for Umair. You manage sub-agents (Website Agent, Research Agent, Business Agent, Agent Builder). Reply in the exact same language or script the user uses (Urdu, Hindi, English, or Roman English). Help him build businesses, write website code, and plan online work.";
+
+  try {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [
+          { role: "user", parts: [{ text: systemPrompt + "\n\nUser Message: " + msg }] }
+        ]
+      })
+    });
+
+    const data = await response.json();
+    if(data.candidates && data.candidates[0].content.parts[0].text) {
+      replyBox.textContent = data.candidates[0].content.parts[0].text;
+    } else {
+      replyBox.textContent = "API سے ڈیٹا حاصل کرنے میں مسئلہ ہوا۔ براہ کرم اپنی API Key چیک کریں۔";
+    }
+  } catch (error) {
+    replyBox.textContent = "کنکشن کا مسئلہ ہے: " + error.message;
+  }
 }
 </script>
 
