@@ -2,288 +2,467 @@
 <html lang="ur" dir="rtl" id="html-root">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#131314">
-<title>UMAIR AI — Gemini Style Chat</title>
+<title>UMAIR AI</title>
 <style>
-:root{
+:root {
   --bg-main: #131314;
-  --bg-card: #1e1f20;
-  --bg-chat: #282a2c;
-  --border-color: #3c4043;
-  --accent-blue: #8ab4f8;
-  --text-main: #e3e3e3;
-  --text-muted: #8e918f;
+  --bg-surface: #1e1f20;
+  --bg-hover: #282a2c;
+  --border: #333537;
+  --accent: #8ab4f8;
+  --accent-dark: #1a73e8;
+  --text: #e3e3e3;
+  --text-dim: #9aa0a6;
 }
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI', Tahoma, sans-serif;}
-body{
-  background:var(--bg-main);
-  color:var(--text-main);
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-}
-header{
-  background:var(--bg-main);
-  padding:15px 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  border-bottom:1px solid var(--border-color);
-  position:sticky;
-  top:0;
-  z-index:100;
-}
-.logo{font-size:20px;font-weight:bold;color:white;}
-.logo span{color:var(--accent-blue);}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+body { background: var(--bg-main); color: var(--text); height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
 
-.top-controls{display:flex;gap:8px;align-items:center;}
-.lang-select, .key-btn {
-  background: var(--bg-card);
-  color: var(--text-main);
-  border: 1px solid var(--border-color);
-  padding: 6px 10px;
-  border-radius: 8px;
-  font-size: 13px;
-  outline: none;
-  cursor: pointer;
+/* Header */
+header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; background: var(--bg-main); border-bottom: 1px solid var(--border); z-index: 20;
 }
-.key-btn{background: #1a73e8;border:none;font-weight:600;color:white;}
-
-main{
-  flex:1;
-  max-width:750px;
-  width:100%;
-  margin:0 auto;
-  padding:15px;
-  display:flex;
-  flex-direction:column;
-  gap:15px;
-  padding-bottom: 120px;
+.header-left, .header-right { display: flex; align-items: center; gap: 10px; }
+.icon-btn {
+  background: transparent; border: none; color: var(--text); font-size: 20px;
+  width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;
+}
+.icon-btn:active { background: var(--bg-hover); }
+.brand { font-size: 19px; font-weight: 700; letter-spacing: 0.5px; }
+.brand span { color: var(--accent); }
+.lang-select {
+  background: var(--bg-surface); color: var(--text); border: 1px solid var(--border);
+  padding: 5px 8px; border-radius: 8px; font-size: 12px; outline: none;
 }
 
-/* API Key Bar */
-.api-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 12px;
-  display: flex;
-  gap: 10px;
-  align-items: center;
+/* Sidebar (Chat History) */
+.sidebar-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 90; display: none;
 }
-.api-section input {
-  flex: 1;
-  background: var(--bg-main);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 8px 12px;
-  color: white;
-  font-size: 13px;
-  outline: none;
+.sidebar {
+  position: fixed; top: 0; bottom: 0; right: -280px; width: 270px; background: var(--bg-surface);
+  border-left: 1px solid var(--border); z-index: 100; transition: 0.3s ease;
+  display: flex; flex-direction: column; padding: 15px;
+}
+.sidebar.open { right: 0; }
+.new-chat-btn {
+  background: var(--bg-hover); color: var(--text); border: 1px solid var(--border);
+  padding: 12px; border-radius: 12px; font-size: 14px; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; gap: 8px; margin-bottom: 15px;
+}
+.history-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+.history-item {
+  padding: 10px 12px; border-radius: 8px; font-size: 13px; color: var(--text-dim);
+  cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.history-item:hover, .history-item.active { background: var(--bg-hover); color: var(--text); }
+
+/* API Key Modal */
+.modal {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 110;
+  display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.modal-box {
+  background: var(--bg-surface); border: 1px solid var(--border); border-radius: 16px;
+  padding: 20px; width: 100%; max-width: 400px; display: flex; flex-direction: column; gap: 12px;
+}
+.modal-box input {
+  background: var(--bg-main); border: 1px solid var(--border); padding: 10px;
+  border-radius: 8px; color: white; font-size: 14px; outline: none;
+}
+.save-btn {
+  background: var(--accent-dark); color: white; border: none; padding: 10px;
+  border-radius: 8px; font-weight: 600; cursor: pointer;
 }
 
-/* Chat Container (Gemini Style) */
-.chat-container {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  width: 100%;
+/* Main Chat Area */
+.chat-scroll {
+  flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 16px;
+  max-width: 760px; width: 100%; margin: 0 auto;
 }
-.message {
-  padding: 14px 18px;
-  border-radius: 16px;
-  font-size: 15px;
-  line-height: 1.6;
-  max-width: 90%;
-  word-wrap: break-word;
-  white-space: pre-wrap;
+.welcome-screen {
+  margin: auto 0; text-align: center; display: flex; flex-direction: column; gap: 16px; padding: 10px;
 }
-.user-msg {
-  background: var(--bg-chat);
-  color: var(--text-main);
-  align-self: flex-end;
-  border-bottom-right-radius: 4px;
+.welcome-screen h1 { font-size: 26px; background: linear-gradient(90deg, #8ab4f8, #c58af9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.quick-agents {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; text-align: right;
 }
-.ai-msg {
-  background: transparent;
-  color: var(--text-main);
-  align-self: flex-start;
-  border: 1px solid var(--border-color);
-  border-bottom-left-radius: 4px;
-  width: 100%;
+.q-card {
+  background: var(--bg-surface); border: 1px solid var(--border); padding: 12px;
+  border-radius: 12px; cursor: pointer; transition: 0.2s;
 }
-.ai-msg strong {color: var(--accent-blue); display:block; margin-bottom:5px;}
+.q-card:active { background: var(--bg-hover); border-color: var(--accent); }
+.q-card b { font-size: 13px; display: block; margin-bottom: 3px; color: var(--accent); }
+.q-card span { font-size: 11px; color: var(--text-dim); }
 
-/* Fixed Bottom Input Box */
-.input-area {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--bg-main);
-  padding: 12px;
-  border-top: 1px solid var(--border-color);
-  display: flex;
-  justify-content: center;
+/* Chat Bubbles */
+.msg { max-width: 88%; padding: 12px 16px; border-radius: 18px; font-size: 15px; line-height: 1.6; word-wrap: break-word; white-space: pre-wrap; }
+.msg.user { background: var(--bg-hover); align-self: flex-end; border-bottom-right-radius: 4px; }
+.msg.ai { background: transparent; align-self: flex-start; width: 100%; max-width: 100%; padding: 8px 4px; }
+.ai-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; font-size: 13px; color: var(--accent); font-weight: 600; }
+.speak-btn { background: var(--bg-surface); border: 1px solid var(--border); color: var(--text); padding: 3px 8px; border-radius: 6px; font-size: 11px; cursor: pointer; }
+.msg img { max-width: 200px; border-radius: 10px; margin-bottom: 8px; display: block; }
+
+/* Bottom Input Bar (Gemini Style) */
+.bottom-bar {
+  background: var(--bg-main); padding: 10px 12px 14px; border-top: 1px solid var(--border);
 }
-.input-box-wrapper {
-  max-width: 750px;
-  width: 100%;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 24px;
-  display: flex;
-  align-items: center;
-  padding: 8px 15px;
-  gap: 10px;
+.preview-box {
+  max-width: 760px; margin: 0 auto 8px; display: none; align-items: center; gap: 10px;
+  background: var(--bg-surface); padding: 6px 10px; border-radius: 10px; width: fit-content;
 }
+.preview-box img { width: 45px; height: 45px; object-fit: cover; border-radius: 6px; }
+.remove-img { color: #f28b82; cursor: pointer; font-weight: bold; font-size: 16px; }
+
+.input-pill {
+  max-width: 760px; margin: 0 auto; background: var(--bg-surface); border: 1px solid var(--border);
+  border-radius: 26px; padding: 6px 10px; display: flex; align-items: flex-end; gap: 6px; position: relative;
+}
+.plus-menu {
+  position: absolute; bottom: 58px; right: 10px; background: var(--bg-surface);
+  border: 1px solid var(--border); border-radius: 14px; padding: 8px; display: none;
+  flex-direction: column; gap: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); z-index: 50;
+}
+.plus-menu button {
+  background: transparent; border: none; color: var(--text); padding: 10px 14px;
+  text-align: right; font-size: 14px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+}
+.plus-menu button:hover { background: var(--bg-hover); }
+
 textarea {
-  flex: 1;
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 15px;
-  resize: none;
-  height: 24px;
-  max-height: 120px;
-  outline: none;
+  flex: 1; background: transparent; border: none; color: var(--text); font-size: 15px;
+  resize: none; max-height: 110px; min-height: 24px; padding: 6px 4px; outline: none; line-height: 1.4;
 }
-.btn-send {
-  background: var(--accent-blue);
-  color: #131314;
-  border: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-weight: bold;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
+.mic-active { color: #f28b82 !important; animation: pulse 1s infinite; }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+.send-btn {
+  background: var(--accent); color: #131314; border: none; width: 36px; height: 36px;
+  border-radius: 50%; font-size: 18px; font-weight: bold; cursor: pointer; flex-shrink: 0;
 }
 </style>
 </head>
 <body>
 
+<!-- Sidebar for Chat History -->
+<div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+<div class="sidebar" id="sidebar">
+  <button class="new-chat-btn" onclick="startNewChat()">➕ نئی چیٹ (New Chat)</button>
+  <div style="font-size:12px; color:var(--text-dim); margin-bottom:8px;">پرانی بات چیت (History)</div>
+  <div class="history-list" id="historyList"></div>
+  <button class="new-chat-btn" style="margin-top:10px; margin-bottom:0;" onclick="openKeyModal()">🔑 API Key سیٹنگ</button>
+</div>
+
+<!-- API Key Modal -->
+<div class="modal" id="keyModal">
+  <div class="modal-box">
+    <h3>Google Gemini API Key</h3>
+    <p style="font-size:12px; color:var(--text-dim);">اپنی مفت API Key یہاں پیسٹ کریں (یہ صرف آپ کے موبائل میں محفوظ رہے گی):</p>
+    <input type="password" id="apiKeyInput" placeholder="AIzaSy...">
+    <button class="save-btn" onclick="saveApiKey()">محفوظ کریں (Save)</button>
+    <button class="save-btn" style="background:transparent; border:1px solid var(--border);" onclick="closeKeyModal()">بند کریں</button>
+  </div>
+</div>
+
+<!-- Header -->
 <header>
-  <div class="logo">UMAIR <span>AI</span></div>
-  <div class="top-controls">
-    <select id="langSelect" class="lang-select">
+  <div class="header-left">
+    <button class="icon-btn" onclick="toggleSidebar()" title="History & Menu">☰</button>
+    <div class="brand">UMAIR <span>AI</span></div>
+  </div>
+  <div class="header-right">
+    <select id="langSelect" class="lang-select" onchange="changeLang()">
       <option value="ur">اردو</option>
       <option value="hi">हिन्दी</option>
       <option value="en">English</option>
-      <option value="rom">Roman English</option>
+      <option value="rom">Roman</option>
     </select>
+    <button class="icon-btn" onclick="startNewChat()" title="New Chat">✎</button>
   </div>
 </header>
 
-<main>
-  <!-- API Key Box -->
-  <div class="api-section">
-    <input type="password" id="apiKeyInput" placeholder="Google Gemini API Key یہاں درج کریں...">
-    <button class="key-btn" onclick="saveApiKey()">محفوظ کریں</button>
-  </div>
-
-  <!-- Chat History Container -->
-  <div class="chat-container" id="chatContainer">
-    <div class="message ai-msg">
-      <strong>UMAIR AI</strong>
-      السلام علیکم! میں آپ کا مرکزی AI ایجنٹ ہوں۔ اوپر اپنی API Key محفوظ کریں اور نیچے چیٹ میں مجھ سے کچھ بھی پوچھیں یا بزنس/ویب سائٹ کا حکم دیں۔
+<!-- Chat Scroll Area -->
+<div class="chat-scroll" id="chatBox">
+  <div class="welcome-screen" id="welcomeScreen">
+    <h1>السلام علیکم، عمیر!</h1>
+    <p style="color:var(--text-dim); font-size:14px;">آپ کا مرکزی AI ایجنٹ تیار ہے۔ نیچے سے کوئی کام منتخب کریں یا براہِ راست بات کریں:</p>
+    <div class="quick-agents">
+      <div class="q-card" onclick="useAgent('میرے لیے ایک پروفیشنل بزنس ویب سائٹ کا مکمل کوڈ بناؤ: ')">
+        <b>🌐 Website Agent</b>
+        <span>اپنی یا کلائنٹ کی ویب سائٹ بنائیں</span>
+      </div>
+      <div class="q-card" onclick="useAgent('مجھے امریکہ یا برطانیہ کے ایسے کاروبار تلاش کرنے کا طریقہ اور پلان دو جنہیں ویب سائٹ کی ضرورت ہو: ')">
+        <b>🔎 Research Agent</b>
+        <span>کلائنٹس اور بزنس تلاش کریں</span>
+      </div>
+      <div class="q-card" onclick="useAgent('میرے کلائنٹ کے لیے ایک کسٹم AI ایجنٹ کا پلان اور سسٹم پرامپٹ تیار کرو جسے میں فروخت کر سکوں: ')">
+        <b>🤖 Agent Builder</b>
+        <span>کلائنٹ کے لیے نیا ایجنٹ بنائیں</span>
+      </div>
+      <div class="q-card" onclick="useAgent('مجھے آن لائن کام سے ماہانہ 70 ہزار روپے کمانے کا عملی مرحلہ وار پلان دو: ')">
+        <b>💼 Business Planner</b>
+        <span>آمدنی اور روزانہ کام کا پلان</span>
+      </div>
     </div>
   </div>
-</main>
+</div>
 
-<!-- Bottom Sticky Input Box -->
-<div class="input-area">
-  <div class="input-box-wrapper">
-    <textarea id="message" placeholder="یہاں پیغام لکھیں..." rows="1" oninput="autoResize(this)"></textarea>
-    <button class="btn-send" onclick="sendToAI()">↑</button>
+<!-- Hidden File Inputs for Camera & Gallery -->
+<input type="file" id="cameraInput" accept="image/*" capture="environment" style="display:none" onchange="handleImage(this)">
+<input type="file" id="galleryInput" accept="image/*" style="display:none" onchange="handleImage(this)">
+
+<!-- Bottom Input Bar -->
+<div class="bottom-bar">
+  <div class="preview-box" id="previewBox">
+    <img id="previewImg" src="">
+    <span class="remove-img" onclick="clearImage()">✕</span>
+  </div>
+
+  <div class="input-pill">
+    <!-- Plus Menu -->
+    <div class="plus-menu" id="plusMenu">
+      <button onclick="document.getElementById('cameraInput').click(); togglePlusMenu();">📷 کیمرے سے تصویر کھینچیں</button>
+      <button onclick="document.getElementById('galleryInput').click(); togglePlusMenu();">🖼️ گیلری سے تصویر لگائیں</button>
+    </div>
+
+    <button class="icon-btn" onclick="togglePlusMenu()" title="Add Photo">➕</button>
+    <textarea id="msgInput" rows="1" placeholder="UMAIR AI سے پوچھیں..." oninput="autoGrow(this)"></textarea>
+    <button class="icon-btn" id="micBtn" onclick="startVoice()" title="Voice Input">🎤</button>
+    <button class="send-btn" onclick="sendMessage()">↑</button>
   </div>
 </div>
 
 <script>
-window.onload = function() {
-  const savedKey = localStorage.getItem("umair_gemini_key");
-  if(savedKey) {
-    document.getElementById("apiKeyInput").value = savedKey;
-  }
+let chats = JSON.parse(localStorage.getItem("umair_chats") || "[]");
+let currentChatId = null;
+let selectedImageBase64 = null;
+let selectedImageMime = null;
+
+window.onload = () => {
+  const key = localStorage.getItem("umair_gemini_key");
+  if (!key) openKeyModal();
+  renderHistory();
+};
+
+function toggleSidebar() {
+  const sb = document.getElementById("sidebar");
+  const ov = document.getElementById("overlay");
+  sb.classList.toggle("open");
+  ov.style.display = sb.classList.contains("open") ? "block" : "none";
 }
 
+function openKeyModal() {
+  document.getElementById("apiKeyInput").value = localStorage.getItem("umair_gemini_key") || "";
+  document.getElementById("keyModal").style.display = "flex";
+}
+function closeKeyModal() { document.getElementById("keyModal").style.display = "none"; }
 function saveApiKey() {
-  const key = document.getElementById("apiKeyInput").value.trim();
-  if(!key) {
-    alert("پہلے درست API Key لکھیں۔");
-    return;
-  }
-  localStorage.setItem("umair_gemini_key", key);
-  alert("API Key کامیابی سے محفوظ ہو گئی ہے!");
+  const k = document.getElementById("apiKeyInput").value.trim();
+  if (!k) return alert("API Key درج کریں!");
+  localStorage.setItem("umair_gemini_key", k);
+  closeKeyModal();
+  alert("API Key محفوظ ہو گئی!");
 }
 
-function autoResize(textarea) {
-  textarea.style.height = '24px';
-  textarea.style.height = textarea.scrollHeight + 'px';
+function togglePlusMenu() {
+  const m = document.getElementById("plusMenu");
+  m.style.display = m.style.display === "flex" ? "none" : "flex";
 }
 
-async function sendToAI() {
-  const apiKey = localStorage.getItem("umair_gemini_key");
+function autoGrow(el) {
+  el.style.height = "24px";
+  el.style.height = el.scrollHeight + "px";
+}
+
+function changeLang() {
+  const l = document.getElementById("langSelect").value;
+  document.getElementById("html-root").setAttribute("dir", l === "ur" ? "rtl" : "ltr");
+}
+
+function useAgent(promptText) {
+  const inp = document.getElementById("msgInput");
+  inp.value = promptText;
+  inp.focus();
+  autoGrow(inp);
+}
+
+// Image Handling
+function handleImage(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const fullData = e.target.result;
+    selectedImageBase64 = fullData.split(",")[1];
+    selectedImageMime = file.type;
+    document.getElementById("previewImg").src = fullData;
+    document.getElementById("previewBox").style.display = "flex";
+  };
+  reader.readAsDataURL(file);
+}
+function clearImage() {
+  selectedImageBase64 = null;
+  selectedImageMime = null;
+  document.getElementById("previewBox").style.display = "none";
+}
+
+// Voice Input (Speech to Text)
+function startVoice() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) return alert("آپ کے براؤزر میں وائس ٹائپنگ دستیاب نہیں ہے۔");
+  const recognition = new SpeechRecognition();
   const lang = document.getElementById("langSelect").value;
-  const msgInput = document.getElementById("message");
-  const msg = msgInput.value.trim();
-  const chatContainer = document.getElementById("chatContainer");
+  recognition.lang = lang === "ur" ? "ur-PK" : (lang === "hi" ? "hi-IN" : "en-US");
+  const micBtn = document.getElementById("micBtn");
+  micBtn.classList.add("mic-active");
 
-  if(!apiKey) {
-    alert("پہلے اوپر خانے میں اپنی API Key محفوظ کریں!");
-    return;
+  recognition.onresult = (event) => {
+    const text = event.results[0][0].transcript;
+    const inp = document.getElementById("msgInput");
+    inp.value += (inp.value ? " " : "") + text;
+    autoGrow(inp);
+  };
+  recognition.onend = () => micBtn.classList.remove("mic-active");
+  recognition.start();
+}
+
+// Text to Speech (AI Voice Reply)
+function speakText(text) {
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  window.speechSynthesis.speak(utterance);
+}
+
+// Chat History Management
+function startNewChat() {
+  currentChatId = null;
+  document.getElementById("chatBox").innerHTML = document.getElementById("welcomeScreen") ? document.getElementById("welcomeScreen").outerHTML : `
+    <div class="welcome-screen" id="welcomeScreen">
+      <h1>نئی چیٹ شروع ہو گئی ہے</h1>
+      <p style="color:var(--text-dim); font-size:14px;">اپنا حکم لکھیں یا بول کر بتائیں...</p>
+    </div>`;
+  if (document.getElementById("sidebar").classList.contains("open")) toggleSidebar();
+}
+
+function renderHistory() {
+  const list = document.getElementById("historyList");
+  list.innerHTML = "";
+  chats.slice().reverse().forEach(c => {
+    const div = document.createElement("div");
+    div.className = "history-item" + (c.id === currentChatId ? " active" : "");
+    div.textContent = c.title;
+    div.onclick = () => loadChat(c.id);
+    list.appendChild(div);
+  });
+}
+
+function loadChat(id) {
+  const chat = chats.find(c => c.id === id);
+  if (!chat) return;
+  currentChatId = id;
+  const box = document.getElementById("chatBox");
+  box.innerHTML = "";
+  chat.messages.forEach(m => appendBubble(m.role, m.text, m.img));
+  renderHistory();
+  toggleSidebar();
+}
+
+function appendBubble(role, text, imgData = null) {
+  const ws = document.getElementById("welcomeScreen");
+  if (ws) ws.remove();
+  const box = document.getElementById("chatBox");
+  const div = document.createElement("div");
+  div.className = "msg " + role;
+
+  if (role === "user") {
+    if (imgData) {
+      const img = document.createElement("img");
+      img.src = imgData;
+      div.appendChild(img);
+    }
+    const p = document.createElement("div");
+    p.textContent = text;
+    div.appendChild(p);
+  } else {
+    div.innerHTML = `<div class="ai-header"><span>✦ UMAIR AI</span><button class="speak-btn" onclick="speakText(this.parentElement.nextElementSibling.textContent)">🔊 سنیں</button></div><div>${text}</div>`;
   }
-  if(!msg) return;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  return div;
+}
 
-  // Append User Message
-  const userDiv = document.createElement("div");
-  userDiv.className = "message user-msg";
-  userDiv.textContent = msg;
-  chatContainer.appendChild(userDiv);
+// Auto-Detect Working Gemini Model & Send
+async function callGeminiAPI(apiKey, parts) {
+  // Fetch available models dynamically so it NEVER gives "model not found" error
+  const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+  const listData = await listRes.json();
+  if (listData.error) throw new Error(listData.error.message);
 
-  msgInput.value = "";
-  msgInput.style.height = '24px';
-  window.scrollTo(0, document.body.scrollHeight);
+  const validModel = listData.models.find(m =>
+    m.supportedGenerationMethods &&
+    m.supportedGenerationMethods.includes("generateContent") &&
+    (m.name.includes("flash") || m.name.includes("pro"))
+  );
 
-  // Append Loading AI Message
-  const aiDiv = document.createElement("div");
-  aiDiv.className = "message ai-msg";
-  aiDiv.innerHTML = `<strong>UMAIR AI</strong>소چ رہا ہے...`;
-  chatContainer.appendChild(aiDiv);
-  window.scrollTo(0, document.body.scrollHeight);
+  const modelName = validModel ? validModel.name : "models/gemini-2.5-flash";
 
-  const systemPrompt = "You are UMAIR AI, an advanced personal AI agent built for Umair. Reply in the exact same language or script the user uses (Urdu, Hindi, English, or Roman English). Help him build businesses, write website code, and manage digital work.";
+  const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/${modelName}:generateContent?key=${apiKey}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ contents: [{ role: "user", parts: parts }] })
+  });
+  return await res.json();
+}
+
+async function sendMessage() {
+  const apiKey = localStorage.getItem("umair_gemini_key");
+  if (!apiKey) return openKeyModal();
+
+  const inp = document.getElementById("msgInput");
+  const text = inp.value.trim();
+  if (!text && !selectedImageBase64) return;
+
+  const imgPreviewSrc = selectedImageBase64 ? document.getElementById("previewImg").src : null;
+
+  if (!currentChatId) {
+    currentChatId = Date.now();
+    chats.push({ id: currentChatId, title: text || "تصویر کا تجزیہ", messages: [] });
+  }
+
+  const currentChat = chats.find(c => c.id === currentChatId);
+  currentChat.messages.push({ role: "user", text: text, img: imgPreviewSrc });
+  appendBubble("user", text, imgPreviewSrc);
+
+  inp.value = "";
+  inp.style.height = "24px";
+
+  const parts = [];
+  const sysPrompt = "You are UMAIR AI, Umair's personal AI assistant & agent manager. Reply in the user's language (Urdu, Hindi, English, or Roman English). Be practical, clear, and helpful.";
+  parts.push({ text: sysPrompt + "\n\nUser: " + (text || "اس تصویر کی تفصیل بتائیں۔") });
+
+  if (selectedImageBase64) {
+    parts.push({ inline_data: { mime_type: selectedImageMime, data: selectedImageBase64 } });
+    clearImage();
+  }
+
+  const aiBubble = appendBubble("ai", "سوچ رہا ہے...");
 
   try {
-    // Using the stable gemini-2.5-flash endpoint compatible with modern v1 API
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [
-          { role: "user", parts: [{ text: systemPrompt + "\n\nUser: " + msg }] }
-        ]
-      })
-    });
-
-    const data = await response.json();
-    if(data.candidates && data.candidates[0].content.parts[0].text) {
-      aiDiv.innerHTML = `<strong>UMAIR AI</strong>${data.candidates[0].content.parts[0].text}`;
-    } else if(data.error) {
-      aiDiv.innerHTML = `<strong>UMAIR AI (ایرر)</strong>${data.error.message}`;
-    } else {
-      aiDiv.innerHTML = `<strong>UMAIR AI</strong>ڈیٹا حاصل کرنے میں مسئلہ ہوا۔`;
+    const data = await callGeminiAPI(apiKey, parts);
+    if (data.candidates && data.candidates[0].content.parts[0].text) {
+      const reply = data.candidates[0].content.parts[0].text;
+      aiBubble.querySelector("div:last-child").textContent = reply;
+      currentChat.messages.push({ role: "ai", text: reply });
+      localStorage.setItem("umair_chats", JSON.stringify(chats));
+      renderHistory();
+    } else if (data.error) {
+      aiBubble.querySelector("div:last-child").textContent = "ایرر: " + data.error.message;
     }
-  } catch (error) {
-    aiDiv.innerHTML = `<strong>UMAIR AI (کنکشن ایرر)</strong>${error.message}`;
+  } catch (err) {
+    aiBubble.querySelector("div:last-child").textContent = "مسئلہ: " + err.message;
   }
-  window.scrollTo(0, document.body.scrollHeight);
 }
 </script>
-
 </body>
 </html>
