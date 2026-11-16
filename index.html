@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="ur" dir="rtl" id="html-root">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0d1117">
-<title>UMAIR AI — Your Personal Agent</title>
+<title>UMAIR AI — Multi-Language Agent</title>
 <style>
 :root{
   --bg-main: #0d1117;
@@ -38,15 +38,18 @@ header{
 .logo-area{display:flex;align-items:center;gap:10px;}
 .logo{font-size:20px;font-weight:bold;letter-spacing:0.5px;}
 .logo span{color:#58a6ff;}
-.status-badge{
-  background:rgba(35, 134, 54, 0.15);
-  color:#3fb950;
-  border:1px solid rgba(35, 134, 54, 0.4);
-  padding:4px 10px;
-  border-radius:20px;
-  font-size:11px;
-  font-weight:600;
+
+.lang-select {
+  background: var(--bg-main);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
 }
+
 main{
   flex:1;
   max-width:700px;
@@ -160,67 +163,158 @@ footer{
   <div class="logo-area">
     <div class="logo">UMAIR <span>AI</span></div>
   </div>
-  <div class="status-badge">● آن لائن سسٹم</div>
+  <div>
+    <select id="langSelect" class="lang-select" onchange="changeLanguage()">
+      <option value="ur">اردو</option>
+      <option value="hi">हिन्दी</option>
+      <option value="en">English</option>
+      <option value="rom">Roman English</option>
+    </select>
+  </div>
 </header>
 
 <main>
   <div class="hero-card">
-    <h2>السلام علیکم، عمیر!</h2>
-    <p>میں آپ کا مرکزی AI ایجنٹ ہوں۔ آپ کے تمام ذیلی ایجنٹس، ویب سائٹ بلڈر اور بزنس ٹولز یہاں سے کنٹرول ہوں گے۔ بتائیں آج کیا کام کرنا ہے؟</p>
+    <h2 id="t-title">السلام علیکم، عمیر!</h2>
+    <p id="t-desc">میں آپ کا مرکزی AI ایجنٹ ہوں۔ آپ کے تمام ذیلی ایجنٹس، ویب سائٹ بلڈر اور بزنس ٹولز یہاں سے کنٹرول ہوں گے۔ بتائیں آج کیا کام کرنا ہے؟</p>
   </div>
 
-  <div class="section-title">آپ کے فعال ایجنٹس</div>
+  <div class="section-title" id="t-active-agents">آپ کے فعال ایجنٹس</div>
   <div class="agents-grid">
     <div class="agent-card">
       <div class="icon">🌐</div>
-      <h4>Website Agent</h4>
-      <p>پروفیشنل ویب سائٹس تیار کرنا</p>
+      <h4 id="t-ag1-title">Website Agent</h4>
+      <p id="t-ag1-desc">پروفیشنل ویب سائٹس تیار کرنا</p>
     </div>
     <div class="agent-card">
       <div class="icon">🔎</div>
-      <h4>Research Agent</h4>
-      <p>امریکہ/برطانیہ میں بزنس ریسرچ</p>
+      <h4 id="t-ag2-title">Research Agent</h4>
+      <p id="t-ag2-desc">امریکہ/برطانیہ میں بزنس ریسرچ</p>
     </div>
     <div class="agent-card">
       <div class="icon">💼</div>
-      <h4>Business Agent</h4>
-      <p>کلائنٹس کے پروجیکٹس مینجمنٹ</p>
+      <h4 id="t-ag3-title">Business Agent</h4>
+      <p id="t-ag3-desc">کلائنٹس کے پروجیکٹس مینجمنٹ</p>
     </div>
     <div class="agent-card">
       <div class="icon">🤖</div>
-      <h4>Agent Builder</h4>
-      <p>نئے ایجنٹس تیار کرنا</p>
+      <h4 id="t-ag4-title">Agent Builder</h4>
+      <p id="t-ag4-desc">نئے ایجنٹس تیار کرنا</p>
     </div>
   </div>
 
   <div class="chat-box">
-    <h3>مرکزی ایجنٹ سے بات چیت</h3>
-    <textarea id="message" placeholder="یہاں اپنا حکم یا پیغام لکھیں (مثلاً: امریکہ میں ویب ڈیزائن کے کلائنٹس تلاش کرو)..."></textarea>
-    <button class="btn-send" onclick="sendToAI()">پیغام بھیجیں</button>
+    <h3 id="t-chat-title">مرکزی ایجنٹ سے بات چیت</h3>
+    <textarea id="message" placeholder="یہاں اپنا حکم یا پیغام لکھیں..."></textarea>
+    <button class="btn-send" id="t-btn" onclick="sendToAI()">پیغام بھیجیں</button>
     <div id="reply"></div>
   </div>
 </main>
 
 <footer>
-  UMAIR AI System © 2026 | Powered by Personal AI Network
+  UMAIR AI System © 2026 | Multi-Language Personal AI
 </footer>
 
 <script>
+const translations = {
+  ur: {
+    title: "السلام علیکم، عمیر!",
+    desc: "میں آپ کا مرکزی AI ایجنٹ ہوں۔ آپ کے تمام ذیلی ایجنٹس، ویب سائٹ بلڈر اور بزنس ٹولز یہاں سے کنٹرول ہوں گے۔ بتائیں آج کیا کام کرنا ہے؟",
+    activeAgents: "آپ کے فعال ایجنٹس",
+    ag1Title: "Website Agent", ag1Desc: "پروفیشنل ویب سائٹس تیار کرنا",
+    ag2Title: "Research Agent", ag2Desc: "امریکہ/برطانیہ میں بزنس ریسرچ",
+    ag3Title: "Business Agent", ag3Desc: "کلائنٹس کے پروجیکٹس مینجمنٹ",
+    ag4Title: "Agent Builder", ag4Desc: "نئے ایجنٹس تیار کرنا",
+    chatTitle: "مرکزی ایجنٹ سے بات چیت",
+    placeholder: "یہاں اپنا حکم یا پیغام لکھیں...",
+    btn: "پیغام بھیجیں",
+    replyMsg: "حکم موصول ہوا: "
+  },
+  hi: {
+    title: "नमस्ते, उमैर!",
+    desc: "मैं आपका मुख्य AI एजेंट हूँ। आपके सभी सब-एजेंट्स, वेबसाइट बिल्डर और बिजनेस टूल्स यहाँ से कंट्रोल होंगे। बताइए आज क्या काम करना है?",
+    activeAgents: "आपके सक्रिय एजेंट्स",
+    ag1Title: "Website Agent", ag1Desc: "प्रोफेशनल वेबसाइट्स तैयार करना",
+    ag2Title: "Research Agent", ag2Desc: "यूएस/यूके में बिजनेस रिसर्च",
+    ag3Title: "Business Agent", ag3Desc: "क्लाइंट्स के प्रोजेक्ट्स मैनेजमेंट",
+    ag4Title: "Agent Builder", ag4Desc: "नए एजेंट्स तैयार करना",
+    chatTitle: "मुख्य एजेंट से बातचीत",
+    placeholder: "यहाँ अपना आदेश या संदेश लिखें...",
+    btn: "संदेश भेजें",
+    replyMsg: "आदेश प्राप्त हुआ: "
+  },
+  en: {
+    title: "Hello, Umair!",
+    desc: "I am your main AI agent. All your sub-agents, website builder, and business tools will be controlled from here. What would you like to do today?",
+    activeAgents: "Your Active Agents",
+    ag1Title: "Website Agent", ag1Desc: "Build professional websites",
+    ag2Title: "Research Agent", ag2Desc: "US/UK business research",
+    ag3Title: "Business Agent", ag3Desc: "Client project management",
+    ag4Title: "Agent Builder", ag4Desc: "Create new custom agents",
+    chatTitle: "Chat with Main Agent",
+    placeholder: "Type your command or message here...",
+    btn: "Send Message",
+    replyMsg: "Command received: "
+  },
+  rom: {
+    title: "Salam Alaikum, Umair!",
+    desc: "Main aapka main AI agent hoon. Aapke sabhi sub-agents, website builder aur business tools yahin se control honge. Bataiye aaj kya kaam karna hai?",
+    activeAgents: "Aapke Active Agents",
+    ag1Title: "Website Agent", ag1Desc: "Professional websites banana",
+    ag2Title: "Research Agent", ag2Desc: "US/UK mein business research",
+    ag3Title: "Business Agent", ag3Desc: "Clients ke projects management",
+    ag4Title: "Agent Builder", ag4Desc: "Naye agents taiyar karna",
+    chatTitle: "Main Agent Se Baat Karein",
+    placeholder: "Yahan apna hukm ya message likhein...",
+    btn: "Message Bhejein",
+    replyMsg: "Hukm mil gaya: "
+  }
+};
+
+function changeLanguage() {
+  const lang = document.getElementById("langSelect").value;
+  const t = translations[lang];
+  
+  // Text direction handle
+  if(lang === 'ur') {
+    document.getElementById("html-root").setAttribute("dir", "rtl");
+  } else {
+    document.getElementById("html-root").setAttribute("dir", "ltr");
+  }
+
+  document.getElementById("t-title").textContent = t.title;
+  document.getElementById("t-desc").textContent = t.desc;
+  document.getElementById("t-active-agents").textContent = t.activeAgents;
+  document.getElementById("t-ag1-title").textContent = t.ag1Title;
+  document.getElementById("t-ag1-desc").textContent = t.ag1Desc;
+  document.getElementById("t-ag2-title").textContent = t.ag2Title;
+  document.getElementById("t-ag2-desc").textContent = t.ag2Desc;
+  document.getElementById("t-ag3-title").textContent = t.ag3Title;
+  document.getElementById("t-ag3-desc").textContent = t.ag3Desc;
+  document.getElementById("t-ag4-title").textContent = t.ag4Title;
+  document.getElementById("t-ag4-desc").textContent = t.ag4Desc;
+  document.getElementById("t-chat-title").textContent = t.chatTitle;
+  document.getElementById("message").placeholder = t.placeholder;
+  document.getElementById("t-btn").textContent = t.btn;
+}
+
 function sendToAI() {
+  const lang = document.getElementById("langSelect").value;
+  const t = translations[lang];
   const msg = document.getElementById("message").value.trim();
   const replyBox = document.getElementById("reply");
   
   if(!msg) {
     replyBox.style.display = "block";
-    replyBox.textContent = "براہ کرم پہلے اپنا پیغام یا حکم یہاں لکھیں۔";
+    replyBox.textContent = lang === 'ur' ? "براہ کرم پہلے اپنا پیغام یا حکم یہاں لکھیں۔" : (lang === 'hi' ? "कृपया पहले अपना संदेश या आदेश लिखें।" : (lang === 'rom' ? "Please pehle apna message likhein." : "Please type your message first."));
     return;
   }
   
   replyBox.style.display = "block";
-  replyBox.textContent = "UMAIR AI آپ کا حکم سمجھ رہا ہے...";
+  replyBox.textContent = lang === 'ur' ? "UMAIR AI آپ کا حکم سمجھ رہا ہے..." : "Processing command...";
   
   setTimeout(() => {
-    replyBox.textContent = "حکم موصول ہوا: \"" + msg + "\"\n\n(یہ انٹرفیس اب جدید ہو چکا ہے۔ اگلے مرحلے میں ہم اس کے پیچھے براہِ راست AI دماغ اور ایجنٹس کی کمانڈز جوڑیں گے!)";
+    replyBox.textContent = t.replyMsg + "\"" + msg + "\"\n\n(Interface updated with Multi-Language support successfully!)";
   }, 1000);
 }
 </script>
