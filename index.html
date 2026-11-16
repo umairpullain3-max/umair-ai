@@ -1,114 +1,229 @@
-
 <!DOCTYPE html>
 <html lang="ur" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#101827">
-<title>UMAIR AI</title>
+<meta name="theme-color" content="#0d1117">
+<title>UMAIR AI — Your Personal Agent</title>
 <style>
-*{box-sizing:border-box}
+:root{
+  --bg-main: #0d1117;
+  --bg-card: #161b22;
+  --border-color: #30363d;
+  --accent-blue: #1f6feb;
+  --accent-glow: rgba(31, 111, 235, 0.4);
+  --text-main: #f0f6fc;
+  --text-muted: #8b949e;
+  --success: #238636;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI', Tahoma, sans-serif;}
 body{
- margin:0;background:#101827;color:white;
- font-family:Arial,sans-serif;min-height:100vh;
+  background:var(--bg-main);
+  color:var(--text-main);
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
 }
 header{
- padding:20px;background:#192538;
- display:flex;align-items:center;justify-content:space-between;
- border-bottom:1px solid #344258;
+  background:var(--bg-card);
+  padding:15px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--border-color);
+  position:sticky;
+  top:0;
+  z-index:100;
 }
-.logo{font-size:23px;font-weight:bold}
-.logo span{color:#55b6ff}
-.status{font-size:12px;color:#71dc9b}
-main{max-width:650px;margin:auto;padding:20px}
-.welcome{
- background:#1b2a40;padding:22px;border-radius:16px;
- margin-top:20px;line-height:1.9;
+.logo-area{display:flex;align-items:center;gap:10px;}
+.logo{font-size:20px;font-weight:bold;letter-spacing:0.5px;}
+.logo span{color:#58a6ff;}
+.status-badge{
+  background:rgba(35, 134, 54, 0.15);
+  color:#3fb950;
+  border:1px solid rgba(35, 134, 54, 0.4);
+  padding:4px 10px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:600;
 }
-h2{margin-top:0}
-h3{margin-top:30px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.card{
- background:#1b2a40;border:1px solid #344258;
- border-radius:13px;padding:18px;text-align:center;
+main{
+  flex:1;
+  max-width:700px;
+  width:100%;
+  margin:0 auto;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
 }
-.card .emoji{font-size:27px}
-.card p{font-size:13px;color:#b8c6d8}
-.chat{
- margin-top:25px;background:#1b2a40;
- padding:15px;border-radius:15px;
+.hero-card{
+  background:linear-gradient(135deg, #1f6feb22, #161b22);
+  border:1px solid var(--border-color);
+  border-radius:16px;
+  padding:24px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
 }
+.hero-card h2{font-size:22px;margin-bottom:8px;color:#58a6ff;}
+.hero-card p{color:var(--text-muted);font-size:14px;line-height:1.6;}
+
+.section-title{
+  font-size:16px;
+  font-weight:600;
+  color:var(--text-muted);
+  margin-top:10px;
+}
+.agents-grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:12px;
+}
+.agent-card{
+  background:var(--bg-card);
+  border:1px solid var(--border-color);
+  border-radius:12px;
+  padding:16px;
+  transition:all 0.2s ease;
+  cursor:pointer;
+}
+.agent-card:hover{
+  border-color:var(--accent-blue);
+  box-shadow: 0 0 12px var(--accent-glow);
+  transform: translateY(-2px);
+}
+.agent-card .icon{font-size:24px;margin-bottom:8px;}
+.agent-card h4{font-size:14px;margin-bottom:4px;color:var(--text-main);}
+.agent-card p{font-size:12px;color:var(--text-muted);}
+
+.chat-box{
+  background:var(--bg-card);
+  border:1px solid var(--border-color);
+  border-radius:16px;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+.chat-box h3{font-size:16px;color:var(--text-main);}
 textarea{
- width:100%;height:90px;padding:12px;
- border:1px solid #40516a;border-radius:10px;
- background:#101827;color:white;font-size:16px;
- resize:vertical;
+  width:100%;
+  height:100px;
+  background:var(--bg-main);
+  border:1px solid var(--border-color);
+  border-radius:10px;
+  padding:12px;
+  color:var(--text-main);
+  font-size:15px;
+  resize:none;
+  outline:none;
+  transition:border-color 0.2s;
 }
-button{
- background:#1688e8;color:white;border:0;
- padding:13px 20px;border-radius:10px;
- font-size:15px;cursor:pointer;margin-top:10px;
+textarea:focus{border-color:var(--accent-blue);}
+.btn-send{
+  background:var(--accent-blue);
+  color:white;
+  border:none;
+  padding:12px 20px;
+  border-radius:10px;
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  transition:background 0.2s;
+  align-self:flex-end;
 }
-#reply{line-height:1.8;color:#b8d9ff;margin-top:15px}
-footer{text-align:center;color:#8190a5;padding:25px;font-size:12px}
+.btn-send:hover{background:#1158c7;}
+#reply{
+  background:var(--bg-main);
+  border:1px solid var(--border-color);
+  border-radius:10px;
+  padding:15px;
+  font-size:14px;
+  line-height:1.7;
+  color:#79c0ff;
+  min-height:50px;
+  white-space:pre-wrap;
+  display:none;
+}
+footer{
+  text-align:center;
+  padding:20px;
+  font-size:12px;
+  color:var(--text-muted);
+  border-top:1px solid var(--border-color);
+  background:var(--bg-card);
+}
 </style>
 </head>
 <body>
+
 <header>
- <div class="logo">UMAIR <span>AI</span></div>
- <div class="status">● سسٹم تیار</div>
+  <div class="logo-area">
+    <div class="logo">UMAIR <span>AI</span></div>
+  </div>
+  <div class="status-badge">● آن لائن سسٹم</div>
 </header>
+
 <main>
- <section class="welcome">
-  <h2>السلام علیکم!</h2>
-  <h3>میں UMAIR AI ہوں۔</h3>
-  میں آپ کا ذاتی AI اسسٹنٹ بننے کے لیے تیار ہوں۔
-  یہاں سے آپ اپنے کام اور ایجنٹس کو منظم کر سکیں گے۔
- </section>
+  <div class="hero-card">
+    <h2>السلام علیکم، عمیر!</h2>
+    <p>میں آپ کا مرکزی AI ایجنٹ ہوں۔ آپ کے تمام ذیلی ایجنٹس، ویب سائٹ بلڈر اور بزنس ٹولز یہاں سے کنٹرول ہوں گے۔ بتائیں آج کیا کام کرنا ہے؟</p>
+  </div>
 
- <h3>آپ کے AI ایجنٹس</h3>
- <section class="grid">
-  <div class="card">
-   <div class="emoji">🌐</div>
-   <b>Website Agent</b>
-   <p>ویب سائٹ بنانے والا ایجنٹ</p>
+  <div class="section-title">آپ کے فعال ایجنٹس</div>
+  <div class="agents-grid">
+    <div class="agent-card">
+      <div class="icon">🌐</div>
+      <h4>Website Agent</h4>
+      <p>پروفیشنل ویب سائٹس تیار کرنا</p>
+    </div>
+    <div class="agent-card">
+      <div class="icon">🔎</div>
+      <h4>Research Agent</h4>
+      <p>امریکہ/برطانیہ میں بزنس ریسرچ</p>
+    </div>
+    <div class="agent-card">
+      <div class="icon">💼</div>
+      <h4>Business Agent</h4>
+      <p>کلائنٹس کے پروجیکٹس مینجمنٹ</p>
+    </div>
+    <div class="agent-card">
+      <div class="icon">🤖</div>
+      <h4>Agent Builder</h4>
+      <p>نئے ایجنٹس تیار کرنا</p>
+    </div>
   </div>
-  <div class="card">
-   <div class="emoji">🔎</div>
-   <b>Research Agent</b>
-   <p>تحقیق اور بزنس تلاش</p>
-  </div>
-  <div class="card">
-   <div class="emoji">💼</div>
-   <b>Business Agent</b>
-   <p>کاروباری منصوبے</p>
-  </div>
-  <div class="card">
-   <div class="emoji">🤖</div>
-   <b>My Agents</b>
-   <p>اپنے ایجنٹس کا انتظام</p>
-  </div>
- </section>
 
- <section class="chat">
-  <h3>اپنے اسسٹنٹ سے بات کریں</h3>
-  <textarea id="message" placeholder="اپنا پیغام یہاں لکھیں..."></textarea>
-  <button onclick="sendMessage()">پیغام بھیجیں</button>
-  <div id="reply"></div>
- </section>
+  <div class="chat-box">
+    <h3>مرکزی ایجنٹ سے بات چیت</h3>
+    <textarea id="message" placeholder="یہاں اپنا حکم یا پیغام لکھیں (مثلاً: امریکہ میں ویب ڈیزائن کے کلائنٹس تلاش کرو)..."></textarea>
+    <button class="btn-send" onclick="sendToAI()">پیغام بھیجیں</button>
+    <div id="reply"></div>
+  </div>
 </main>
-<footer>UMAIR AI © 2026 | Your Personal AI Assistant</footer>
+
+<footer>
+  UMAIR AI System © 2026 | Powered by Personal AI Network
+</footer>
 
 <script>
-function sendMessage(){
- const message=document.getElementById("message").value.trim();
- const reply=document.getElementById("reply");
- if(!message){
-  reply.textContent="براہ کرم پہلے اپنا پیغام لکھیں۔";
-  return;
- }
- reply.textContent="آپ کا پیغام موصول ہوگیا۔ AI Brain ابھی منسلک نہیں ہے۔ اسے اگلے مرحلے میں جوڑیں گے۔";
+function sendToAI() {
+  const msg = document.getElementById("message").value.trim();
+  const replyBox = document.getElementById("reply");
+  
+  if(!msg) {
+    replyBox.style.display = "block";
+    replyBox.textContent = "براہ کرم پہلے اپنا پیغام یا حکم یہاں لکھیں۔";
+    return;
+  }
+  
+  replyBox.style.display = "block";
+  replyBox.textContent = "UMAIR AI آپ کا حکم سمجھ رہا ہے...";
+  
+  setTimeout(() => {
+    replyBox.textContent = "حکم موصول ہوا: \"" + msg + "\"\n\n(یہ انٹرفیس اب جدید ہو چکا ہے۔ اگلے مرحلے میں ہم اس کے پیچھے براہِ راست AI دماغ اور ایجنٹس کی کمانڈز جوڑیں گے!)";
+  }, 1000);
 }
 </script>
+
 </body>
 </html>
