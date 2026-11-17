@@ -201,7 +201,7 @@ textarea {
         <b id="qa3t">🤖 Agent Builder</b>
         <span id="qa3d">Build custom agents for clients</span>
       </div>
-      <div class="q-card" onclick="useAgent('मुझे ऑनलाइन کام سے ماہانہ 70 ہزار روپے کمانے کا عملی مرحلہ وار پلان دو: ')">
+      <div class="q-card" onclick="useAgent('मुझे ऑनलाइन काम से ماہانہ 70 ہزار روپے کمانے کا عملی مرحلہ وار پلان دو: ')">
         <b id="qa4t">💼 Business Planner</b>
         <span id="qa4d">Income & daily work plan</span>
       </div>
@@ -428,7 +428,7 @@ function startNewChat() {
         <div class="q-card" onclick="useAgent('میرے کلائنٹ کے لیے ایک کسٹم AI ایجنٹ کا پلان اور سسٹم پرامپٹ تیار کرو جسے میں فروخت کر سکوں: ')">
           <b>${t.qa3t}</b><span>${t.qa3d}</span>
         </div>
-        <div class="q-card" onclick="useAgent('مجھے آن لائن کام سے ماہانہ 70 ہزار روپے کمانے کا عملی مرحلہ وار پلان دو: ')">
+        <div class="q-card" onclick="useAgent('मुझे ऑनलाइन کام سے ماہانہ 70 ہزار روپے کمانے کا عملی مرحلہ وار پلان دو: ')">
           <b>${t.qa4t}</b><span>${t.qa4d}</span>
         </div>
       </div>
@@ -518,8 +518,20 @@ async function sendMessage() {
   const aiBubble = appendBubble("ai", "سوچ رہا ہے...");
 
   try {
-    // Dynamic endpoint fallback supporting both standard Gemini API and Vertex AI style keys
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+    // Fully dynamic model finder from Google AI Studio list
+    let modelName = "gemini-1.5-flash";
+    try {
+      const listRes = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+      const listData = await listRes.json();
+      if (listData.models) {
+        const found = listData.models.find(m => m.supportedGenerationMethods && m.supportedGenerationMethods.includes("generateContent") && (m.name.includes("flash") || m.name.includes("pro")));
+        if (found) {
+          modelName = found.name.replace("models/", "");
+        }
+      }
+    } catch(e) {}
+
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ contents: [{ role: "user", parts: parts }] })
